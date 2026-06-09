@@ -1,147 +1,235 @@
+---
+title: Aakaasham
+emoji: 🌌
+colorFrom: blue
+colorTo: green
+sdk: streamlit
+python_version: "3.11"
+app_file: app.py
+pinned: false
+---
+
 # 🌌 Aakaasham
+
 **ആകാശം** — Sky in Malayalam
 
-Astronomical event predictor for Kerala, India.  
-Combines **Skyfield** (NASA ephemeris) with a **scikit-learn RandomForest** visibility classifier
-trained on 4 years of historical weather data across all Kerala locations.
+Astronomical event predictor for Kerala, India.
+
+Aakaasham combines precise astronomical calculations using Skyfield and NASA ephemeris data with a machine learning visibility model trained on historical weather patterns across Kerala. The platform helps users identify the best locations and times for astronomical observation, planetary viewing, meteor showers, conjunctions, and other celestial events.
 
 ---
 
 ## Features
 
-- 🗺️ **Kerala-wide coverage** — all 14 districts + dark sky spots (Munnar, Vagamon, Nelliampathy...)
-- 🪐 **Planet lineup** — real-time altitude/azimuth for all planets from any Kerala location
-- 🌠 **Event calendar** — conjunctions, meteor showers, lunar eclipses, oppositions
-- 🤖 **ML visibility model** — RandomForest trained on cloud cover, humidity, monsoon season, elevation, Bortle class
-- 📊 **Insights dashboard** — feature importance, monthly breakdown, per-location accuracy
-- 🌙 **Moon phase** — automatic illumination & interference scoring
+- 🗺️ Kerala-wide coverage across districts and dark-sky locations
+- 🪐 Real-time planetary positions and visibility
+- 🌠 Astronomical event calendar
+- 🤖 Machine learning sky visibility prediction
+- 📊 Weather and visibility analytics dashboard
+- 🌙 Moon phase and illumination tracking
+- 📍 Location-specific observation recommendations
+- ☁️ Historical weather-based visibility scoring
 
 ---
 
 ## Quick Start
 
+### Clone the Repository
+
 ```bash
-# 1. Clone / unzip project
+git clone https://github.com/adithyankoonoth/aakaasham.git
 cd aakaasham
-
-# 2. Create virtual environment
-python -m venv venv
-source venv/bin/activate      # Windows: venv\Scripts\activate
-
-# 3. Install dependencies
-pip install -r requirements.txt
-
-# 4. Build the dataset (downloads 4 years of Kerala weather — ~5 min, cached after)
-python ml/dataset.py
-
-# 5. Train the ML model
-python ml/train_model.py
-
-# 6. Launch the app
-streamlit run app.py
 ```
 
-The app works even before training — it falls back to a heuristic visibility model.
+### Create a Virtual Environment
+
+```bash
+python -m venv venv
+```
+
+Windows:
+
+```bash
+venv\Scripts\activate
+```
+
+Linux / macOS:
+
+```bash
+source venv/bin/activate
+```
+
+### Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### Generate Dataset
+
+```bash
+python ml/dataset.py
+```
+
+### Train the Model
+
+```bash
+python ml/train_model.py
+```
+
+### Launch the Application
+
+```bash
+streamlit run app.py
+```
 
 ---
 
 ## Project Structure
 
-```
+```text
 aakaasham/
-├── config.py              # All Kerala locations, coordinates, Bortle class
+│
+├── app.py
+├── config.py
 ├── requirements.txt
-├── app.py                 # Streamlit frontend (dark astronomy theme)
+├── README.md
 │
 ├── core/
-│   └── ephemeris.py       # Skyfield: planet positions, conjunctions, eclipses
+│   └── ephemeris.py
 │
 ├── ml/
-│   ├── dataset.py         # Open-Meteo data fetcher for all Kerala locations
-│   └── train_model.py     # RandomForest training, evaluation, prediction
+│   ├── dataset.py
+│   └── train_model.py
 │
-└── data/
-    ├── cache/             # Per-location weather CSVs (auto-generated)
-    ├── kerala_sky_dataset.csv   # Combined labeled dataset
-    └── visibility_model.pkl     # Trained model
+├── data/
+│   ├── cache/
+│   ├── kerala_sky_dataset.csv
+│   └── visibility_model.pkl
+│
+└── assets/
 ```
 
 ---
 
-## ML Model
+## Machine Learning Model
 
-**Algorithm:** RandomForestClassifier (scikit-learn)
+### Algorithm
 
-**Features:**
+- Random Forest Classifier
+- Scikit-learn
+
+### Features Used
+
 | Feature | Description |
-|---|---|
-| `cloud_pct` | Cloud cover % — most important feature |
-| `humidity_pct` | Atmospheric humidity |
-| `seeing_index` | Composite atmospheric stability score |
-| `visibility_m` | Meteorological visibility |
-| `is_monsoon` | Binary — June to September |
-| `moon_illumination_pct` | Moon brightness (% illuminated) |
-| `elevation_m` | Location elevation above sea level |
-| `bortle` | Light pollution class (1–9) |
-| `wind_kmh` | Wind speed |
-| `month` / `hour` | Temporal features |
+|----------|-------------|
+| cloud_pct | Cloud cover percentage |
+| humidity_pct | Relative humidity |
+| visibility_m | Atmospheric visibility |
+| seeing_index | Sky stability score |
+| moon_illumination_pct | Moon brightness |
+| wind_kmh | Wind speed |
+| elevation_m | Elevation of location |
+| bortle | Light pollution class |
+| is_monsoon | Monsoon season indicator |
+| month | Month of observation |
+| hour | Hour of observation |
 
-**Label:** `good_sky = 1` if cloud < 30%, humidity < 75%, no rain, visibility > 8km, nighttime
+### Prediction Target
 
-**Training data:** 4 years (2021–2024), ~500,000 hourly rows across 22 Kerala locations
-
-**Expected performance:**
-- CV ROC-AUC: ~0.91
-- Test Accuracy: ~0.88
+Good sky visibility conditions for astronomical observation.
 
 ---
 
 ## Locations Covered
 
-### Districts
-Thiruvananthapuram, Kollam, Pathanamthitta, Alappuzha, Kottayam,
-Idukki, Ernakulam, Thrissur, Palakkad, Malappuram, Kozhikode,
-Wayanad, Kannur, Kasaragod
+### Kerala Districts
 
-### Dark Sky Spots ⭐
-Munnar (1600m), Nelliampathy (1250m), Vagamon (1100m), Peermade (915m),
-Ponmudi (1100m), Vythiri (900m), Thekkady (900m), Athirappilly (50m)
+- Thiruvananthapuram
+- Kollam
+- Pathanamthitta
+- Alappuzha
+- Kottayam
+- Idukki
+- Ernakulam
+- Thrissur
+- Palakkad
+- Malappuram
+- Kozhikode
+- Wayanad
+- Kannur
+- Kasaragod
+
+### Dark Sky Locations
+
+- Munnar
+- Vagamon
+- Ponmudi
+- Peermade
+- Nelliampathy
+- Vythiri
+- Thekkady
+- Athirappilly
 
 ---
 
-## Data Sources
+## Technology Stack
 
-- **Weather history:** [Open-Meteo](https://open-meteo.com/) — free, no API key
-- **Ephemeris:** NASA DE421 via [Skyfield](https://rhodesmill.org/skyfield/)
-- **Real-time weather:** OpenWeatherMap (optional — add API key in config.py)
+### Frontend
+
+- Streamlit
+
+### Astronomy
+
+- Skyfield
+- NASA DE421 Ephemeris
+
+### Machine Learning
+
+- Scikit-learn
+- Pandas
+- NumPy
+
+### Data Sources
+
+- Open-Meteo Historical Weather API
+- NASA Ephemeris Data
 
 ---
 
-## Deploy to Hugging Face Spaces
+## Deployment
+
+This application is configured for deployment on Hugging Face Spaces using Streamlit.
 
 ```bash
-# 1. Create new Space at huggingface.co/spaces
-# 2. Choose: Streamlit · Python 3.10
-
-# 3. Push your code
-git init
 git add .
-git commit -m "initial commit"
-git remote add space https://huggingface.co/spaces/YOUR_USERNAME/aakaasham
+git commit -m "deploy update"
 git push space main
 ```
 
 ---
 
-## Resume Description
+## Future Improvements
 
-> Built an astronomical event predictor for Kerala, India using Skyfield for precise
-> NASA ephemeris calculations and a scikit-learn RandomForest classifier trained on
-> 500K rows of historical weather data across 22 locations. Features planetary conjunction
-> detection, meteor shower calendars, lunar eclipse prediction, and an ML visibility
-> model incorporating Kerala's monsoon seasonality, elevation, and light pollution data.
-> Deployed on Hugging Face Spaces with an interactive Streamlit dashboard.
+- Satellite pass predictions
+- ISS tracking
+- Deep-sky object recommendations
+- Real-time weather integration
+- Mobile-responsive interface
+- Advanced astrophotography planning tools
 
 ---
 
-Built by a Kerala maker 🌴 · Data-driven stargazing for God's Own Country
+## Resume Summary
+
+Built an astronomy and sky visibility prediction platform for Kerala using Skyfield, NASA ephemeris data, and a Random Forest machine learning model trained on historical weather patterns. The application provides planetary positions, event predictions, and observation recommendations through an interactive Streamlit dashboard deployed on Hugging Face Spaces.
+
+---
+
+## License
+
+MIT License
+
+---
+
+Built with ❤️ in Kerala.
