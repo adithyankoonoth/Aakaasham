@@ -1,0 +1,12 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.pkl
+data/cache/
+data/*.csv
+*.bsp
+.env
+.streamlit/secrets.toml
