@@ -220,12 +220,6 @@ git push space main
 
 ---
 
-## Resume Summary
-
-Built an astronomy and sky visibility prediction platform for Kerala using Skyfield, NASA ephemeris data, and a Random Forest machine learning model trained on historical weather patterns. The application provides planetary positions, event predictions, and observation recommendations through an interactive Streamlit dashboard deployed on Hugging Face Spaces.
-
----
-
 ## License
 
 MIT License
