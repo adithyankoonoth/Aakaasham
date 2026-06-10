@@ -16,6 +16,30 @@ from config import KERALA_LOCATIONS, BORTLE_DESC, METEOR_SHOWERS
 
 IST = pytz.timezone("Asia/Kolkata")
 
+
+# Auto-generate dataset and model on first launch (for Hugging Face Spaces)
+os.makedirs("data", exist_ok=True)
+
+if not os.path.exists("data/kerala_sky_dataset.csv"):
+    st.set_page_config(page_title="Aakaasham", page_icon="🌌")
+    st.title("🌌 Aakaasham — ആകാശം")
+    st.info("⏳ First launch — downloading Kerala weather data. This takes ~3 minutes...")
+    progress = st.progress(0, text="Fetching weather data for all Kerala locations...")
+    from ml.dataset import build_full_kerala_dataset
+    build_full_kerala_dataset()
+    progress.progress(100, text="Done!")
+    st.rerun()
+
+if not os.path.exists("data/visibility_model.pkl"):
+    st.set_page_config(page_title="Aakaasham", page_icon="🌌")
+    st.title("🌌 Aakaasham — ആകാശം")
+    st.info("🤖 Training ML visibility model...")
+    from ml.train_model import load_and_prepare, train, save_model
+    X, y, df, le = load_and_prepare()
+    model, *_ = train(X, y)
+    save_model(model, le)
+    st.rerun()
+
 # ─────────────────────────────────────────────
 # PAGE CONFIG
 # ─────────────────────────────────────────────
